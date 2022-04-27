@@ -1,6 +1,6 @@
-#### Project: Cinner et al. The potential impacts of climate change on agriculture and fisheries production in 73 tropical coastal communities ####
+#### Project: Cinner et al. The potential impacts of climate change on agriculture and fisheries production in 72 tropical coastal communities ####
 #### Objective : Analysis and creating figures ####
-#### Authors : Lauric Thiault & Iain R. Caldwell ####
+#### Authors : Iain R. Caldwell & Lauric Thiault ####
 #### Last update : 2022/02/01 ####
 ####  Contents:
 ####  1) Analysis - calculate statistics for the main text
@@ -476,40 +476,30 @@ fig1c_StudySiteMap <- ggplot() +
            y = 3,
            label = "Papua New Guinea\n(n=10)",
            hjust = 1,
-           #color = countryColors["papua new guinea"],
-           fontface = 2,
            size = 3) + 
   annotate("text",
            x = 136,
            y = 15,
            label = "Philippines\n(n=25)",
            hjust = 1,
-           #color = countryColors["philippines"],
-           fontface = 2,
            size = 3) + 
   annotate("text",
            x = 110,
            y = 0,
            label = "Indonesia\n(n=25)",
            hjust = 0.5,
-           #color = countryColors["indonesia"],
-           fontface = 2,
            size = 3) + 
   annotate("text",
            x = 42,
            y = -5,
            label = "Tanzania\n(n=6)",
            hjust = 0,
-           #color = countryColors["tanzania"],
-           fontface = 2,
            size = 3) + 
   annotate("text",
            x = 52,
            y = -15,
            label = "Madagascar\n(n=6)",
            hjust = 0,
-           #color = countryColors["madagascar"],
-           fontface = 2,
            size = 3) + 
   theme_bw() +
   theme(panel.grid.major = element_blank(),
@@ -518,24 +508,28 @@ fig1c_StudySiteMap <- ggplot() +
         legend.key = element_rect(fill = NA),
         aspect.ratio = 0.4)
 
+#Get legend from map for Supplementary figure 9
+countryShapeLegend <- get_legend(fig1c_StudySiteMap)
+
 ####        iv) Assemble figure 1 ####
 fig1_AgFishExposureVsSensitivityWithMap <- ggpubr::ggarrange(
   #First row with plots of exposure vs sensitivity
   egg::ggarrange(fig1a_AgExpVsSensPlot,
                  fig1b_FishExpVsSensPlot,
-                 ncol = 2, labels = c("A", "B"),
+                 ncol = 2, labels = c("a", "b"),
                  label.args = list(gp = grid::gpar(font = 2))),
   #Second row with map
   egg::ggarrange(fig1c_StudySiteMap,
-                 ncol = 1, labels = "C",
+                 ncol = 1, labels = "c",
                  label.args = list(gp = grid::gpar(font = 2))),
   nrow = 2, heights = c(1,1.4)
 )
 
 ggsave(plot = fig1_AgFishExposureVsSensitivityWithMap, 
-       filename = paste0(plotDir, "AgFish_Fig1_AgFishExposureVsSensitivityWithStudySites.tiff"),
-       width = 8,
-       height = 6)
+       filename = paste0(plotDir, "AgFish_Fig1_AgFishExposureVsSensitivityWithStudySites.pdf"),
+       width = 200,
+       height = 170,
+       units = "mm")
 
 ####    b) Figure 2: Agriculture vs. fisheries exposure and comparison with random locations ####
 #Combine the exposure data for the study sites and random sites
@@ -581,14 +575,16 @@ fig2main_AgVsFishExpWithRandomPlot <- ggplot() +
              aes(yintercept = Avg_E_agr_Ssp585,
                  color = Type), linetype = "dashed") +
   scale_color_manual(values = studyRandomColors,
+                     breaks = c("Study", "Random"),
                      name = NULL) +
-  guides(color = "none", size = "none") +
   scale_x_continuous(name = "Fisheries exposure\n(% loss by mid-century)",
                      limits = fig2_fishExpLims) +
   scale_y_continuous(name = "Agriculture exposure\n(% loss by mid-century)",
                      limits = fig2_agExpLims, breaks = fig2_agExpBreaks) +
   theme_bw() +
-  theme(panel.grid.major = element_blank(),
+  theme(legend.position = c(0.2, 0.2),
+        #legend.background = element_rect(colour = 'black', fill = 'white', linetype='solid'),
+        panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         aspect.ratio = 1)
 
@@ -629,9 +625,10 @@ fig2_AgVsFishExpWithMarginalDensPlot <- egg::ggarrange(fig2horizhist_FishExpCoun
                                                           heights = c(1, 4))
 
 ggsave(plot = fig2_AgVsFishExpWithMarginalDensPlot, 
-       filename = paste0(plotDir, "AgFish_Fig2_AgVsFishExposureWithMarginalDensities.tiff"),
-       width = 8,
-       height = 8)
+       filename = paste0(plotDir, "AgFish_Fig2_AgVsFishExposureWithMarginalDensities.pdf"),
+       width = 180,
+       height = 180,
+       units = "mm")
 
 ####    c) Figure 3: Agriculture vs. fisheries exposure with sector dependency and across SSP's ####
 # Calculate a "relative sector dependency" (i.e. difference between fisheries and agriculture sensitivity)
@@ -719,13 +716,14 @@ fig3b_ClimateMitigationPlot <- ggplot(data = agFishSiteTBL) +
 ######      iii) Assemble figure 3 ####
 figure3_AgVsFishExpByDepRcpPlot <- egg::ggarrange(fig3a_AgVsFishExpRelCumDepPlot,
                                                   fig3b_ClimateMitigationPlot,
-                                                  ncol = 2, labels = c("A", "B"),
+                                                  ncol = 2, labels = c("a", "b"),
                                                   label.args = list(gp = grid::gpar(font = 2)))
 
 ggsave(plot = figure3_AgVsFishExpByDepRcpPlot, 
-       filename = paste0(plotDir, "AgFish_Fig3_AgVsFishExposureByDependencyRCP.tiff"),
-       width = 8,
-       height = 6)
+       filename = paste0(plotDir, "AgFish_Fig3_AgVsFishExposureByDependencyRCP.pdf"),
+       width = 200,
+       height = 130,
+       units = "mm")
 
 ####    d) Figure 4: Potential impacts vs. MSL across SSP's ####
 ##Create the labels for the plots
@@ -757,16 +755,17 @@ fig4_PotImpVsMslColByCountryFacetByRcpPlot <- ggplot(data = agFishSiteLongTBL) +
                      breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1.0)) +
   theme_bw() +
   theme(strip.background = element_blank(),
-        strip.text.x = element_text(hjust = 0.5, face = "bold"),
-        legend.position="bottom",
+        strip.text.x = element_text(hjust = 0.5),
+        legend.position = "bottom",
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         aspect.ratio = 1)
 
 ggsave(plot = fig4_PotImpVsMslColByCountryFacetByRcpPlot, 
-       filename = paste0(plotDir, "AgFish_Fig4_PotImpVsMslByCountryRCP.tiff"),
-       width = 8,
-       height = 6)
+       filename = paste0(plotDir, "AgFish_Fig4_PotImpVsMslByCountryRCP.pdf"),
+       width = 200,
+       height = 150,
+       units = "mm")
 
 ####    e) Figure 5: Sensitivity and material style of life over time in two PNG locations ####
 ####      i) Figure 5a - plot of agriculture vs. fisheries sensitivity over time in two PNG sites ####
@@ -842,7 +841,7 @@ fig5b_MSLPC1vs2_ByTimePNG <- ggplot() +
   geom_hline(yintercept = 0, color = "grey", linetype = "dashed", size = 1) +
   geom_segment(data = mslPcaResTBL %>% filter(!is.na(Label)), aes(x = 0, y = 0, xend = RC1, yend = RC2), color = "grey") +
   geom_text(data = mslPcaResTBL %>% filter(!is.na(Label)), aes(x = RC1, y = RC2, label = Label), color = "black", size = 2,
-            position = position_jitter(width = 0.01, height = 0.01)) +
+            position = position_jitter(width = 0.011, height = 0.011)) +
   geom_path(data = pngTimeTBL %>% filter(Community == "AH") %>% arrange(Year),
             aes(x = MSL1, y = MSL2),
             color = "#0072B2") +
@@ -900,13 +899,14 @@ fig5b_MSLPC1vs2_ByTimePNG <- ggplot() +
 ######        iii) Assemble figure 5 ####
 figure5_SensMslByTimePngPlot <- egg::ggarrange(fig5a_AgVsFishSensByTimePNG,
                                                   fig5b_MSLPC1vs2_ByTimePNG,
-                                                  ncol = 2, labels = c("A", "B"),
+                                                  ncol = 2, labels = c("a", "b"),
                                                   label.args = list(gp = grid::gpar(font = 2)))
 
 ggsave(plot = figure5_SensMslByTimePngPlot, 
-       filename = paste0(plotDir, "AgFish_Fig5_SensMslOverTimePng.tiff"),
-       width = 8,
-       height = 6)
+       filename = paste0(plotDir, "AgFish_Fig5_SensMslOverTimePng.pdf"),
+       width = 200,
+       height = 140,
+       units = "mm")
 
 
 ####  3) Supplementary figures ####
@@ -959,17 +959,12 @@ agExpAllLongTBL <- bind_rows(agExpLongTBL, agExpRandLongTBL) %>%
                              Ssp585 = "SSP5 - 8.5"),
          Data = factor(Data, levels = c("Study sites", "Random sites")))
 
-#Set colors for the figure
-cropColors <- c("#C4961A", "#FFDB6D", "#F4EDCA", "#52854C", "#C3D7A4")
-names(cropColors) <- c("Cassava", "Maize", "Rice", "Total", "Weighted")
-  
 figS1_ExpByCropSspRandStudyFacetsBoxplots <- ggplot(data = agExpAllLongTBL,
                                                     aes(x = Crop,
                                                         y = Exposure)) +
   facet_grid(vars(Data), vars(SSP)) +
   geom_hline(yintercept = 0, color = "grey", linetype = "dashed") +
-  geom_boxplot(aes(fill = Crop)) +
-  scale_fill_manual(values = cropColors) +
+  geom_boxplot() +
   scale_y_continuous(limits = c(-60, 15),
                      breaks = c(-50, -40, -30, -30, -20, -10, 0, 10)) +
   ylab(label = "Production loss (%)") +
@@ -983,8 +978,9 @@ figS1_ExpByCropSspRandStudyFacetsBoxplots <- ggplot(data = agExpAllLongTBL,
   
 ggsave(plot = figS1_ExpByCropSspRandStudyFacetsBoxplots, 
        filename = paste0(plotDir, "AgFish_FigS1_AgExpByCropSspRandomStudyFacetsBoxplots.tiff"),
-       width = 8,
-       height = 8)
+       width = 200,
+       height = 200,
+       units = "mm")
 
 ####    b) Figure S2: Agriculture vs. fisheries exposure with random sites compared between SSP's ####
 #Create data for average lines (from the mixed effects models including country as a random effect)
@@ -1057,13 +1053,14 @@ figS2_AgVsFishExpWithMarginalDensPlot <- egg::ggarrange(figS2horizhist_FishExpCo
 ###         Now combine that with figure 2 (SSP5 - 8.5)
 figS2_AgVsFishExpWithMargDensPlotsSsps126and585 <- ggarrange(figS2_AgVsFishExpWithMarginalDensPlot,
                                                              fig2_AgVsFishExpWithMarginalDensPlot,
-                                                             labels = c("A.        SSP1 - 2.6", "B.        SSP5 - 8.5"),
+                                                             labels = c("a         SSP1 - 2.6", "b         SSP5 - 8.5"),
                                                              ncol = 2, label.y = 0.9, label.x = 0.5, hjust = 1)
 
 ggsave(plot = figS2_AgVsFishExpWithMargDensPlotsSsps126and585, 
        filename = paste0(plotDir, "AgFish_FigS2_AgVsFishExposureWithMarginalDensitiesBothSSP.tiff"),
-       width = 8,
-       height = 6)
+       width = 200,
+       height = 150,
+       units = "mm")
 
 ####    c) Figure S3: Combined exposure vs combined sensitivity across SSPs ####
 ####      i) Fig S3a - Agriculture-fisheries exposure vs. sensitivity for RCP 2.6 and 8.5 as two facets ####
@@ -1178,15 +1175,14 @@ figS3b_DiffAgFishExpVsSensByCountryPotImpScatterplot <- ggplot(data = diffAgFish
 figS3_AgFishExpVsSensCompSsp126and585Plots <- ggarrange(figS3a_AgFishExpVsSensByCountryPotImpSspFacetScatterplotsNoLegend,
                                                         figS3_legend,
                                                         figS3b_DiffAgFishExpVsSensByCountryPotImpScatterplot,
-                                                        nrow = 3, labels = c("A", "", "B"),
+                                                        nrow = 3, labels = c("a", "", "b"),
                                                         heights = c(1, 0.3, 1))
 
 ggsave(plot = figS3_AgFishExpVsSensCompSsp126and585Plots, 
        filename = paste0(plotDir, "AgFish_FigS3_AgFishExposureVsSensCompSsp126and585.tiff"),
-       width = 8,
-       height = 10)
-
-
+       width = 200,
+       height = 250,
+       units = "mm")
 
 ####    d) Figure S4: Combined sensitivity and combined exposure vs. MSL ####
 ####      i) Fig S4a - Rescaled agriculture-fisheries sensitivity vs. MSL ####
@@ -1278,7 +1274,7 @@ figS4b_ExpvsMSL_ByCountrySspWithStatsNoLegendPlot <- ggplot(data = agFishSiteLon
   coord_cartesian(ylim = c(0,1), xlim = c(0,1)) +
   theme_bw() +
   theme(strip.background = element_blank(),
-        strip.text.x = element_text(hjust = 0.5, face = "bold"),
+        strip.text.x = element_text(hjust = 0.5),
         legend.position = "none",
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -1288,14 +1284,15 @@ figS4b_ExpvsMSL_ByCountrySspWithStatsNoLegendPlot <- ggplot(data = agFishSiteLon
 figS4_AgFishSensExpVsMSL_CompSsp126and585Plots <- ggarrange(figS4a_SvsMSL_ByCountryWithStatsPlotNoLegend,
                                                             figS4_legend,
                                                             figS4b_ExpvsMSL_ByCountrySspWithStatsNoLegendPlot,
-                                                            nrow = 3, labels = c("A", "", "B"),
+                                                            nrow = 3, labels = c("a", "", "b"),
                                                             heights = c(1, 0.3, 1))
                                                                      
 
 ggsave(plot = figS4_AgFishSensExpVsMSL_CompSsp126and585Plots, 
        filename = paste0(plotDir, "AgFish_FigS4_AgFishSensitivityAndExposureVsMSL_CompSsp126and585.tiff"),
-       width = 8,
-       height = 10)
+       width = 200,
+       height = 230,
+       units = "mm")
 
 ####    e) Figure S5: Map of locations from which agriculture and fisheries data were extracted  ####
 expTypeColors <- c("#62BD69", "#73A5C6")
@@ -1318,8 +1315,9 @@ figS5_AgFishExposureLocMap <- ggplot() +
 
 ggsave(plot = figS5_AgFishExposureLocMap, 
        filename = paste0(plotDir, "AgFish_FigS5_AgFishExposureExtractionLocationMap.tiff"),
-       width = 8,
-       height = 6)
+       width = 200,
+       height = 140,
+       units = "mm")
 
 ####    f) Figure S9: Finer scale maps showing locations of study sites in each country with average model agreement ####
 #Get a fine scale coastline map to plot 
@@ -1424,26 +1422,20 @@ figS9_FineScaleMapStudyLocsAvgAgreement <- ggpubr::ggarrange(
   figS9b_IndonesiaPhilippinesPngMap,
   ncol = 2, common.legend = T, 
   widths = c(0.5, 1), 
-  legend = "bottom", labels = c("A", "B"), label.y = c(0.9, 0.8)
+  legend = "bottom", labels = c("a", "b"), label.y = c(0.9, 0.8)
 )
 
-ggsave(plot = figS9_FineScaleMapStudyLocsAvgAgreement, 
+figS9withLegend_FineScaleMapStudyLocsAvgAgreement <- ggpubr::ggarrange(
+  figS9_FineScaleMapStudyLocsAvgAgreement,
+  countryShapeLegend,
+  nrow = 2, heights = c(1, 0.2) 
+)
+
+ggsave(plot = figS9withLegend_FineScaleMapStudyLocsAvgAgreement, 
        filename = paste0(plotDir, "AgFish_FigS9_FineScaleMapStudyLocsAvgModelAgreement.tiff"),
-       width = 8,
-       height = 6)
+       width = 200,
+       height = 140,
+       units = "mm")
 
 dev.off()
 # end of the script
-
-
-
-
-
-
-
-
-
-
-
-
-
